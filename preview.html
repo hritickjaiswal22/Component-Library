@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Component Library Preview</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      // Your Button component
+      const Button = React.forwardRef(
+        (
+          { variant = "primary", size = "md", children, className, ...props },
+          ref
+        ) => {
+          const baseStyles =
+            "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+
+          const variantStyles = {
+            primary:
+              "bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-500",
+            secondary:
+              "bg-gray-200 text-gray-900 hover:bg-gray-300 focus-visible:ring-gray-500",
+            outline:
+              "border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 focus-visible:ring-gray-500",
+          };
+
+          const sizeStyles = {
+            sm: "h-8 px-3 text-sm",
+            md: "h-10 px-4 text-sm",
+            lg: "h-12 px-6 text-base",
+          };
+
+          const classes = `${baseStyles} ${variantStyles[variant]} ${
+            sizeStyles[size]
+          } ${className || ""}`;
+
+          return React.createElement(
+            "button",
+            {
+              ref: ref,
+              className: classes,
+              ...props,
+            },
+            children
+          );
+        }
+      );
+
+      // Preview App
+      function App() {
+        return (
+          <div className="p-8 space-y-8">
+            <h1 className="text-3xl font-bold">Button Component Preview</h1>
+
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Variants</h2>
+              <div className="flex gap-4">
+                <Button variant="primary">Primary</Button>
+                <Button variant="secondary">Secondary</Button>
+                <Button variant="outline">Outline</Button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Sizes</h2>
+              <div className="flex gap-4 items-center">
+                <Button size="sm">Small</Button>
+                <Button size="md">Medium</Button>
+                <Button size="lg">Large</Button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">States</h2>
+              <div className="flex gap-4">
+                <Button>Normal</Button>
+                <Button disabled>Disabled</Button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Interactive</h2>
+              <div className="flex gap-4">
+                <Button onClick={() => alert("Primary clicked!")}>
+                  Click me!
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => console.log("Outline clicked!")}
+                >
+                  Check console
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // Render
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
