@@ -1,18 +1,34 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline";
-  size?: "sm" | "md" | "lg";
-  children: React.ReactNode;
+  /** Button click handler */
+  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+
+  /** Button content (text or JSX) */
+  children: ReactNode;
+
+  /** Shows loadingChildren instead of children and disables click */
+  loading?: boolean;
+
+  /** Content to show during loading */
+  loadingChildren?: ReactNode;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { variant = "primary", size = "md", children, className, ...props },
+    { children, loading, loadingChildren = "Loading...", onClick, ...props },
     ref
   ) => {
-    return <button>{children}</button>;
+    const content = loading ? loadingChildren : children;
+    const clickHandler =
+      typeof onClick === "function" && !loading ? onClick : undefined;
+
+    return (
+      <button ref={ref} onClick={clickHandler} {...props}>
+        {content}
+      </button>
+    );
   }
 );
 
