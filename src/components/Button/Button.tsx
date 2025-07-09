@@ -1,4 +1,13 @@
 import React, { ReactNode } from "react";
+import { CSSObject } from "styled-components";
+
+import { StyledButton } from "./Button.styles";
+
+export type ButtonVariant = "primary" | "secondary" | "outline";
+
+export interface ButtonStyles extends CSSObject {
+  // Add any custom style properties you want
+}
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -13,11 +22,25 @@ export interface ButtonProps
 
   /** Content to show during loading */
   loadingChildren?: ReactNode;
+
+  /** Button variants "primary" | "secondary" | "outline" */
+  variant?: ButtonVariant;
+
+  /** Custom styles */
+  sx?: ButtonStyles & CSSObject;
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { children, loading, loadingChildren = "Loading...", onClick, ...props },
+    {
+      children,
+      loading,
+      loadingChildren = "Loading...",
+      onClick,
+      sx,
+      variant,
+      ...props
+    },
     ref
   ) => {
     const content = loading ? loadingChildren : children;
@@ -25,9 +48,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       typeof onClick === "function" && !loading ? onClick : undefined;
 
     return (
-      <button ref={ref} onClick={clickHandler} {...props}>
+      <StyledButton
+        ref={ref}
+        onClick={clickHandler}
+        variant={variant}
+        sx={sx}
+        loading={loading}
+        disabled={loading || props.disabled}
+        {...props}
+      >
         {content}
-      </button>
+      </StyledButton>
     );
   }
 );
